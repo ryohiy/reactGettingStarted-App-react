@@ -4,7 +4,15 @@ import "./styles.css";
 
 export const App = () => {
   const [todoText, setTodoText] = useState("");
-  const [incompleteTodos, setIncompleteTodos] = useState(["aaa", "bbb"]);
+  const [incompleteTodos, setIncompleteTodos] = useState([
+    "aaa",
+    "bbbb",
+    "testttttttttttttttttttttttt",
+    "1111",
+    "sssssssss",
+    "",
+    "222"
+  ]);
   const [completeTodos, setCompleteTodos] = useState(["ccc"]);
 
   const onChangeTodoText = (event) => setTodoText(event.target.value);
@@ -14,6 +22,28 @@ export const App = () => {
     const newTodos = [...incompleteTodos, todoText];
     setIncompleteTodos(newTodos);
     setTodoText("");
+  };
+
+  const onComplete = (todo, index) => {
+    const newInCompleteTodos = [...incompleteTodos];
+    const newCompleteTodos = [...completeTodos, todo];
+
+    newInCompleteTodos.splice(index, 1);
+
+    setCompleteTodos(newCompleteTodos);
+    setIncompleteTodos(newInCompleteTodos);
+  };
+
+  const onClickDelete = (index) => {
+    console.log(index);
+    const newTodos = [...incompleteTodos];
+    newTodos.splice(index, 2);
+    //たまたま自分のコードのバグで気づいたsplineの仕様
+    //第一引数に文字列が入ると0番目の要素を指定した事になり、そこから第二引数分要素を削除する
+    //文字列が数字("2222"等)なら、int型と判断する。
+    //まぁそもそもそんな使い方するなって話ではあるけど、エラー吐かずに動いちゃうのは驚き。
+    console.log(newTodos);
+    setIncompleteTodos(newTodos);
   };
 
   return (
@@ -29,7 +59,8 @@ export const App = () => {
       <div className="incomplete-area">
         <p className="title">未完了のTODO</p>
         <ul>
-          {incompleteTodos.map((todo) => {
+          {incompleteTodos.map((todo, index) => {
+            //1個目の引数で配列の実体,2つ目でindex番号
             // reactでループ処理をする際の注意点
             //ループ内で返却している一番上のタグにkeyというものを設定して
             //あげなきゃだめ
@@ -38,8 +69,10 @@ export const App = () => {
             return (
               <div key={todo} className="list-row">
                 <li>{todo}</li>
-                <button>完了</button>
-                <button>削除</button>
+                <button onClick={() => onComplete(todo, index)}>完了</button>
+                <button onClick={() => onClickDelete(index)}>削除</button>
+                {/* 下記だと読み込まれたタイミングで関数が実行されてしまう！引数を渡す時は↑！新しく関数を生成するイメージ。 */}
+                {/* <button onClick={onClickDelete(index)}>削除</button> */}
               </div>
             );
           })}
