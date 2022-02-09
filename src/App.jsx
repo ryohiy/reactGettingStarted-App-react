@@ -26,7 +26,7 @@ export const App = () => {
 
   const onComplete = (todo, index) => {
     const newInCompleteTodos = [...incompleteTodos];
-    const newCompleteTodos = [...completeTodos, todo];
+    const newCompleteTodos = [...completeTodos, todo]; //todo = incompleteTodos[index]
 
     newInCompleteTodos.splice(index, 1);
 
@@ -37,13 +37,24 @@ export const App = () => {
   const onClickDelete = (index) => {
     console.log(index);
     const newTodos = [...incompleteTodos];
-    newTodos.splice(index, 2);
+    newTodos.splice(index, 1);
+    // newTodos.splice(index, 2);
     //たまたま自分のコードのバグで気づいたsplineの仕様
     //第一引数に文字列が入ると0番目の要素を指定した事になり、そこから第二引数分要素を削除する
     //文字列が数字("2222"等)なら、int型と判断する。
     //まぁそもそもそんな使い方するなって話ではあるけど、エラー吐かずに動いちゃうのは驚き。
     console.log(newTodos);
     setIncompleteTodos(newTodos);
+  };
+
+  const onClickBack = (index) => {
+    const newInCompleteTodos = [...incompleteTodos, completeTodos[index]];
+    const newCompleteTodos = [...completeTodos];
+
+    newCompleteTodos.splice(index, 1);
+
+    setIncompleteTodos(newInCompleteTodos);
+    setCompleteTodos(newCompleteTodos);
   };
 
   return (
@@ -78,14 +89,15 @@ export const App = () => {
           })}
         </ul>
       </div>
+
       <div className="complete-area">
         <p className="title">完了のTODO</p>
         <ul>
-          {completeTodos.map((todo) => {
+          {completeTodos.map((todo, index) => {
             return (
               <div key={todo} className="list-row">
                 <li>{todo}</li>
-                <button>戻す</button>
+                <button onClick={() => onClickBack(index)}>戻す</button>
               </div>
             );
           })}
