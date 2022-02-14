@@ -1,2 +1,2 @@
-# reactGettingStarted-App-react2
+# reactGettingStarted-App-react
 Created with CodeSandbox
